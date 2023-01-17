@@ -171,11 +171,11 @@ with tab_mints:
     elif st.session_state.mints_interval == 'Weekly':
         df = mints_daily
         df = df.groupby(pd.Grouper(freq='W', key='Date')).agg(
-            {'Minters': 'sum', 'NFTs': 'sum', 'Volume': 'sum', 'VolumeUSD': 'sum', 'Price': 'mean', 'PriceUSD': 'mean'}).reset_index()
+            {'Minters': 'sum', 'MintedNFTs': 'sum', 'BurnedNFTs': 'sum', 'Volume': 'sum', 'VolumeUSD': 'sum', 'Price': 'mean', 'PriceUSD': 'mean'}).reset_index()
     elif st.session_state.mints_interval == 'Monthly':
         df = mints_daily
         df = df.groupby(pd.Grouper(freq='MS', key='Date')).agg(
-            {'Minters': 'sum', 'NFTs': 'sum', 'Volume': 'sum', 'VolumeUSD': 'sum', 'Price': 'mean', 'PriceUSD': 'mean'}).reset_index()
+            {'Minters': 'sum', 'MintedNFTs': 'sum', 'BurnedNFTs': 'sum', 'Volume': 'sum', 'VolumeUSD': 'sum', 'Price': 'mean', 'PriceUSD': 'mean'}).reset_index()
 
     fig = sp.make_subplots(specs=[[{'secondary_y': True}]])
     fig.add_trace(go.Bar(x=df['Date'], y=df['Volume'], name='ETH Volume', hovertemplate='%{y:,.2f} ETH<extra></extra>'), secondary_y=False)
@@ -200,7 +200,8 @@ with tab_mints:
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     fig = px.bar(df, x='Date', y='BurnedNFTs', title='Burned Lil Nouns Over Time')
-    fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Number of Lil Nouns')
+    fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Number of Lil Nouns', hovermode='x unified')
+    fig.update_traces(hovertemplate='Lil Nouns: %{y:,.0f}<extra></extra>')
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
 with tab_sales:
