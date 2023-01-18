@@ -21,7 +21,7 @@ with open('style.css')as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
 
 # Data Sources
-# @st.cache(ttl=3600)
+@st.cache(ttl=3600)
 def get_data(query):
     if query == 'Mints Overview':
         return pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/c88b2d6a-158b-4b1a-bc18-0a3920ada097/data/latest')
@@ -472,7 +472,7 @@ with tab_governance:
         """
         Governance is the core point of interest in every DAO, which is also the case for Lil Nouns DAO.
         In this section, a comprehensive evaluation of governance on Lil Nouns DAO, proposed proposals,
-        and the breakdown of votes has been analyzed and presented.
+        and the breakdown of votes, all extracted from on-chain data has been analyzed and presented.
         """
     )
 
