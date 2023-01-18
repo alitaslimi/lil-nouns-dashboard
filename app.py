@@ -29,6 +29,8 @@ def get_data(query):
         return pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/ab1699c8-24c2-49cc-b8fe-09f50e2cfd7f/data/latest')
     elif query == 'Traits':
         return pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/b82c2f87-3a01-447d-934a-0f56f10dc975/data/latest')
+    elif query == 'Rarity':
+        return pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/32069d6d-a488-41de-acd7-f92fe3afce7a/data/latest')
     elif query == 'Sales Overview':
         return pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/953f9a9c-2949-4332-80fb-a574b853ae2e/data/latest')
     elif query == 'Sales Daily':
@@ -43,6 +45,8 @@ def get_data(query):
         return pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/25621d2e-9779-4a2e-93be-b516f6507e25/data/latest')
     elif query == 'Proposals Overview':
         return pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/04a97aa4-8a2d-4378-92fe-87fccaadbc60/data/latest')
+    elif query == 'Votes Overview':
+        return pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/ad3f18ce-0807-48a5-acc1-4417bd6437d6/data/latest')
     elif query == 'Votes Options':
         return pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/42c4e655-b154-409a-9e70-05057e838a8d/data/latest')
     return None
@@ -56,6 +60,7 @@ holders_overview = get_data('Holders Overview')
 holders_holdings = get_data('Holders Holdings')
 holders_distribution = get_data('Holders Distribution')
 proposals_overview = get_data('Proposals Overview')
+votes_overview = get_data('Votes Overview')
 votes_options = get_data('Votes Options')
 
 traits = get_data('Traits')
@@ -77,6 +82,13 @@ traits["Accessory"] = traits["Accessory"].map(accessories)
 traits["Head"] = traits["Head"].map(heads)
 traits["Glasses"] = traits["Glasses"].map(glasses)
 
+traits_rarity = get_data('Rarity')
+traits_rarity["Background"] = traits_rarity["Background"].map(backgrounds)
+traits_rarity["Body"] = traits_rarity["Body"].map(bodies)
+traits_rarity["Accessory"] = traits_rarity["Accessory"].map(accessories)
+traits_rarity["Head"] = traits_rarity["Head"].map(heads)
+traits_rarity["Glasses"] = traits_rarity["Glasses"].map(glasses)
+
 # Content
 st.header('Introduction')
 
@@ -91,22 +103,21 @@ with c1:
         that NFT. The main interface for participating in the auctions is Lil Nouns official website
         maintained by the founders of the project.
 
-        The Lil Nouns decentralized autonomous organization (DAO) treasury receives 100% of ETH
-        proceeds from daily noun auctions. Lil Nouns DAO is the main governing body of the Lil Nouns
-        ecosystem. Each Lil Noun is entitled to one vote in all governance matters. Lil Nouns Holders
-        can utilize their voting power (1 Lil Noun = 1 vote) to direct the treasury. They can propose
-        new ideas or vote on the existing ones which will be executed on the Ethereum blockchain when
-        they are approved. A minimum of 7 Lil Nouns is required for a holder to submit proposals.
-        The voting power of Lil Nouns can also be delegated to a third party.
+        The Lil Nouns DAO treasury receives 100% of ETH proceeds from daily noun auctions. It is the
+        main governing body of the Lil Nouns ecosystem. Each Lil Noun is entitled to one vote in all
+        governance matters. Lil Nouns Holders can utilize their voting power (1 Lil Noun = 1 vote) to
+        direct the treasury. They can propose new ideas or vote on the existing ones which will be
+        executed on the Ethereum blockchain when they are approved. Currently, a minimum of 7 Lil Nouns
+        is required for a holder to submit proposals. The voting power of Lil Nouns can also be
+        delegated to a third party.
 
         Lil Nounders is the term attributed to the group of builders that initiated Lil Nouns. As
         100% of Lil Noun auction earnings are sent to the DAO, they have chosen to compensate themselves
         with one every 10th Lil Noun, starting from #0, for the first five years. These Lil Nouns
         will be automatically sent to a multi-signature address shared among the founding members.
-
         Lil Nounders have also chosen to compensate the Nouns DAO with Lil Nouns. Every 10th Lil Noun
-        starting from #1 for the first five years will be sent to the Nouns DAO treasury shared among
-        the members of the project.
+        starting from #1 for the first five years will be sent to the Nouns DAO treasury and shared
+        among the members of the project.
         """
     )
 with c2:
@@ -116,17 +127,21 @@ with c2:
 with st.expander('**Methodology**'):
     st.write(
         """
-        The data for this mega dashboard were selected from the [**Flipside Crypto**](https://flipsidecrypto.xyz)
+        The data for this dashboard was selected from the [**Flipside Crypto**](https://flipsidecrypto.xyz)
         data platform by using its **REST API**. These queries are currently set to **re-run every 24 hours** to
-        cover the latest data and are imported as a JSON file directly to each page. The code for this tool is
-        saved and accessible in its [**GitHub Repository**](https://github.com/alitaslimi/optimism-dashboard).
+        cover the latest data and are imported as a JSON file. The code for this tool is saved and accessible
+        in its [**GitHub Repository**](https://github.com/alitaslimi/lil-nouns-dashboard).
 
-        This mega dashboard is designed and structured in multiple **Pages** that are accessible using the sidebar.
-        Each of these Pages addresses a different segment of the Optimism ecosystem. By browsing each page
-        (Macro, Transfers, Swaps, NFTs, etc.) you are able to dive deeper into each secotr of the Optimism's
-        network.
-
-        Links to the data **queries** are available in the GitHub repository of this tool. 
+        This dashboard is designed and structured in multiple **Tabs** that are accessible under the **Analysis**
+        section. Each of these Tabs addresses a different segment of the Lil Nouns DAO (Mints, Sales, Holders,
+        Governance, etc.).
+        
+        **Contract Addresses:**
+        - Lil Nouns NFT: [0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b](https://etherscan.io/token/0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b)
+        - Lil Nounders Multi-Sig: [0x3cf6a7f06015acad49f76044d3c63d7fe477d945](https://etherscan.io/address/0x3cf6a7f06015acad49f76044d3c63d7fe477d945)
+        - Nouns DAO Treasury: [0x0bc3807ec262cb779b38d65b38158acc3bfede10](https://etherscan.io/address/0x0bc3807ec262cb779b38d65b38158acc3bfede10)
+        - Lil Nouns Initiator: [0xa6ef22a84521ddd11c1282ec8f8a9255dbac04a0](https://etherscan.io/address/0xa6ef22a84521ddd11c1282ec8f8a9255dbac04a0)
+        - Nouns DAO Executer: [0xd5f279ff9eb21c6d40c8f345a66f2751c4eea1fb](https://etherscan.io/address/0xd5f279ff9eb21c6d40c8f345a66f2751c4eea1fb)
         """
     )
 
@@ -134,7 +149,13 @@ st.header('Analysis')
 
 st.write(
     """
-    Analysis Text.
+    The hyper-inflationary nature of Lil Nouns makes its NFTs different from other collections. It
+    should be noted that these NFTs act as a key to access the DAO and the decisions that are being
+    made for its treasury. The constant minting of the Lil Nouns puts their focus on their voting
+    power for their holders, in comparison to the financial gain of NFTs of other collections.
+    Considering this, although the primary and secondary sales data are presented in this dashboard,
+    the focus of the analysis was on governance and user engagement with the proposals submitted to
+    the DAO.
     """
 )
 
@@ -144,7 +165,16 @@ with tab_mints:
 
     st.write(
         """
-        Analysis Text.
+        Lil Nouns are being distributed using an on-chain auction every 15 minutes. In other words,
+        the minting (primary sales) process of these NFTs is conducted using a bidding mechanism.
+        After the conclusion of the bidding of every 9th Lil Noun (#9, #19, #29 and so on), the 10th
+        and 11th Lil Nouns are automatically minted and transferred to the wallet address of Lil Nouns
+        DAO and Lil Nounders. With that being said, the data in this section only represents the
+        result of auctions and shows the initial distribution of Lil Nouns. It is worth mentioning
+        that if no one bids on a Lil Noun, it will be burned and sent to a NULL address. Holders also
+        are able to burn their tokens, resulting in the reduction of the total number of circulating
+        NFTs. The data regarding the exact number of Lil Nouns supply are available on the **Holders**
+        tab.
         """
     )
 
@@ -208,7 +238,10 @@ with tab_sales:
 
     st.write(
         """
-        Analysis Text.
+        The secondary sales data of Lil Nouns are presented in this section. A considerable number
+        of addresses have bought Lil Nouns through NFT marketplaces, especially OpenSea, since the
+        current average price of these NFTs is slightly below the 1.5 ETH that is required to bid
+        on their auctions.
         """
     )
 
@@ -297,6 +330,15 @@ with tab_sales:
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
 with tab_traits:
+
+    st.write(
+        """
+        Although each Lil Noun has four unique traits, except its background, they have little to
+        no impact on the price of these NFTs. This section is just for enthusiast holders to see
+        how common or rare their Lil Noun is.
+        """
+    )
+
     st.subheader('Overview')
 
     c1, c2 = st.columns(2)
@@ -352,8 +394,29 @@ with tab_traits:
         fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Number of Lil Nouns')
         fig.update_xaxes(type='category', categoryorder='total descending')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+    
+    with st.expander('**Rarity of Lil Nouns**', expanded=True):
+        st.write(
+            """
+            The **Rarity** columns are all in percent. The value means that only X% of the Lil Nouns
+            have traits similar to this Lil Noun. Since the traits are almost equally distributed,
+            the rarity of all the Lil Nouns is quite close to one another.
+            """
+        )
+        df = traits_rarity.sort_values(by='Rarity', ascending=True).reset_index(drop=True)
+        df.index += 1
+        st.dataframe(df, use_container_width=True)
 
 with tab_holders:
+
+    st.write(
+        """
+        This section covers the most updated holders' information on Lil Nouns considering all
+        token transfers (mints, sales, and burns) to determine the accurate number of NFTs
+        each holder holds. This is important since Lil Nouns give their holders the voting power
+        for participation in proposals.
+        """
+    )
 
     st.subheader('Overview')
     
@@ -369,14 +432,14 @@ with tab_holders:
         st.metric(label='**Average Lil Nouns per Holder**', value=str('{:,.0f}'.format(df['NFTs'].agg('sum') / df['Holders'].agg('sum'))))
         st.metric(label='**Lil Nouns of Other Holders**', value=str(df.loc[df['Holder'] == 'Other']['NFTs'].map('{:,.0f}'.format).values[0]))
 
-    st.subheader('Shares')
+    st.subheader('Distribution')
 
     c1, c2, c3 = st.columns(3)
     with c1:
         df = holders_holdings.sort_values('NFTs', ascending=False).reset_index(drop=True)
         df.loc[holders_holdings.index >= 7, 'Holder'] = 'Other'
         df.loc[df['Holder'].str[0] == '0', 'Holder'] = df['Holder'].str[:5] + '...' + df['Holder'].str[-5:]
-        fig = px.pie(df, values='NFTs', names='Holder', title='Holding Share of Top Lil Noun Holders', hole=0.4)
+        fig = px.pie(df, values='NFTs', names='Holder', title='Tokens Distribution Among Top Lil Noun Holders', hole=0.4)
         fig.update_layout(legend_title=None, legend_y=0.5)
         fig.update_traces(textinfo='percent+label', textposition='inside')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
@@ -398,13 +461,35 @@ with tab_holders:
     df = holders_holdings.sort_values(by='NFTs', ascending=False).head(50)
     df.loc[df['Holder'].str[0] == '0', 'Holder'] = df['Holder'].str[:5] + '...' + df['Holder'].str[-5:]
     fig = px.bar(df, x='Holder', y='NFTs', color='Holder', title='Top Lil Noun Holders')
-    fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Number of NFTs')
+    fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Number of NFTs', hovermode='x unified')
+    fig.update_traces(hovertemplate='%{y:,.0f} Lil Nouns<extra></extra>')
     fig.update_xaxes(type='category', categoryorder='total ascending')
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
 with tab_governance:
 
+    st.write(
+        """
+        Governance is the core point of interest in every DAO, which is also the case for Lil Nouns DAO.
+        In this section, a comprehensive evaluation of governance on Lil Nouns DAO, proposed proposals,
+        and the breakdown of votes has been analyzed and presented.
+        """
+    )
+
     st.subheader('Overview')
+
+    df = votes_overview
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        st.metric(label='**Total Number of Proposals**', value=str(df['Proposals'].map('{:,.0f}'.format).values[0]))
+    with c2:
+        st.metric(label='**Total Number of Unique Voters**', value=str(df['Voters'].map('{:,.0f}'.format).values[0]))
+    with c3:
+        st.metric(label='**Total Number of Votes**', value=str(df['Votes'].map('{:,.0f}'.format).values[0]))
+    with c4:
+        st.metric(label='**Average Number of Votes per Voter**', value=str(df['Votes/Voter'].map('{:,.0f}'.format).values[0]))
+
+    st.subheader('Distribution')
 
     c1, c2 = st.columns(2)
     with c1:
@@ -440,23 +525,24 @@ with tab_governance:
         fig.update_traces(textinfo='percent+label', textposition='inside')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
-    st.subheader('Outcome of Porposals')
+    st.subheader('Conclusion of Porposals')
     
     df = proposals_overview
-    fig = px.bar(df, x='Proposal', y='Votes', color='Result', title='Result of Each Proposal')
-    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Number of NFTs')
+    fig = px.bar(df, x='Proposal', y='Votes', color='Result', title='Conclusion of Each Proposal')
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Votes', hovermode='x unified')
+    fig.update_traces(hovertemplate='%{y:,.0f} Votes<extra></extra>')
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     df = votes_options
-    c1, c2= st.columns(2)
-    with c1:
-        fig = px.bar(df, x='Proposal', y='Votes', color='Option', title='Distribution of Votes for Each Proposal')
-        fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Votes')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-    with c2:
-        fig = px.bar(df, x='Proposal', y='Voters', color='Option', title='Distribution of Voters for Each Proposal')
-        fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Voters')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+    fig = px.bar(df, x='Proposal', y='Votes', color='Option', custom_data=['Option'], title='Distribution of Votes for Each Proposal')
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Votes', hovermode='x unified')
+    fig.update_traces(hovertemplate='%{customdata}: %{y:,.0f} Votes<extra></extra>')
+    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+    fig = px.bar(df, x='Proposal', y='Voters', color='Option', custom_data=['Option'], title='Distribution of Voters for Each Proposal')
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Voters', hovermode='x unified')
+    fig.update_traces(hovertemplate='%{customdata}: %{y:,.0f} Voters<extra></extra>')
+    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     st.subheader('Votes Breakdown')
 
@@ -483,7 +569,13 @@ st.header('Conclusion')
 
 st.write(
     """
-    Conclusion Text.
+    It has been less than a year since the Lil Nouns DAO started its activity. However, it has
+    reached a steady state over the past few months, truly acting as a smaller version of Nouns
+    DAO, befitting its name. New and old holders are holding their Lil Nouns, not because of
+    their financial value, but because of their voting power over the decision-making on the DAO.
+    Proposals are being proposed, and while the community has not been extremely engaging, those
+    that participate have had considerable voting power, contributing to the path of the DAO
+    moving forward.
     """
 )
 
